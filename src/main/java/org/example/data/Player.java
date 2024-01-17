@@ -1,11 +1,10 @@
-package org.example.model;
+package org.example.data;
 
 import lombok.Getter;
 import lombok.ToString;
-import org.example.config.Config;
-import org.example.service.Fortune;
+import org.example.provider.FortuneProvider;
 
-import java.util.Random;
+import static org.example.config.Config.config;
 
 @Getter
 @ToString
@@ -15,7 +14,7 @@ public class Player implements Comparable<Player> {
 
   public Player(int id) {
     this.id = id;
-    this.calories = Config.config().getInitialCalories();
+    this.calories = config().getInitialCalories();
   }
 
   public void pay(int payment) {
@@ -31,8 +30,19 @@ public class Player implements Comparable<Player> {
     }
     return this;
   }
+
   public Player eat(Packet dish, Packet stolenDish) {
-    return eat(new Packet(dish.getCalories() + stolenDish.getCalories(), stolenDish.isPoison()));
+    if (stolenDish.isPoison()) {
+      dish.setPoison(true);
+    }
+    this.eat(dish);
+//    Packet newPacket = Packet.builder()
+//            .calories(dish.getCalories() + stolenDish.getCalories())
+//            .isPoison(stolenDish.isPoison())
+//            .build();
+
+    this.eat(stolenDish);
+    return this;
   }
 
   public boolean isAlive() {
@@ -41,7 +51,7 @@ public class Player implements Comparable<Player> {
 
   @Override
   public int compareTo(Player otherPlayer) {
-    double probability = Fortune.getPlayerSuccessProbability();
+    double probability = FortuneProvider.getPlayerSuccessProbability();
     return Double.compare(otherPlayer.getCalories() * probability, this.getCalories() * probability);
   }
 }

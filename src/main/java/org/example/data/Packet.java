@@ -1,14 +1,14 @@
-package org.example.model;
+package org.example.data;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
-//@RequiredArgsConstructor
-@Getter
+@Data
 @ToString
 @Builder
 public class Packet {
-  private final int calories;
-  private final boolean isPoison;
+  private int calories;
+  private boolean isPoison;
 }
