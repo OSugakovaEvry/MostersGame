@@ -19,6 +19,7 @@ public class Engine {
 
   public void run(List<Player> players, Map<Integer, Packet> food) {
     players = reorder(players);
+
     int thiefIdx = FortuneProvider.getThiefIdx(players.size());
     for (int i = 0; i < players.size(); i++) {
 

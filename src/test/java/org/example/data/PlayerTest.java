@@ -2,9 +2,6 @@ package org.example.data;
 
 import org.junit.Test;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PlayerTest {
@@ -31,9 +28,5 @@ public class PlayerTest {
     player = player.eat(ownPacket, stolenPacket);
 
     assertEquals(player.getCalories(), 2);
-  }
-
-  private static Stream<List<Player>> packets() {
-    return Stream.of(null, List.of(), List.of(new Player(1)));
   }
 }

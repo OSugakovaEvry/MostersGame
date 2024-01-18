@@ -33,7 +33,7 @@ public class DataProvider {
             .collect(toMap(identity(), p -> getPortion(poisonProbability, calories)));
   }
 
-  private static Packet getPortion(double poisonProbability, List<Integer> calories) {
+  public static Packet getPortion(double poisonProbability, List<Integer> calories) {
     int nextInt = random.nextInt(calories.size());
 
     return random.nextDouble() <= poisonProbability
