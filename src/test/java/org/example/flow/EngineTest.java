@@ -1,20 +1,23 @@
 package org.example.flow;
 
-import junit.framework.TestCase;
 import org.example.config.RuleConfig;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.Collections;
-
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class EngineTest extends TestCase {
+public class EngineTest {
 
-  public void testTestRun() {
-    Engine engine = new Engine(RuleConfig.SPECIAL);
+  @ParameterizedTest
+  @EnumSource(RuleConfig.class)
+  public void testTestRun(RuleConfig config) {
+    Engine engine = new Engine(config);
     assertThatThrownBy(
-            () -> {
-              engine.run(Collections.emptyList(), Collections.emptyMap());
-            })
-            .isInstanceOf(Exception.class);
+            () ->
+                    engine.run(emptyList(), emptyMap())
+    )
+            .isInstanceOf(IllegalArgumentException.class);
   }
 }
