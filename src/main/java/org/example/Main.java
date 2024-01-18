@@ -4,8 +4,8 @@ import org.example.config.RuleConfig;
 import org.example.data.Player;
 import org.example.flow.Game;
 
-import static java.util.Optional.ofNullable;
-import static org.example.config.Config.config;
+import java.util.Arrays;
+
 import static org.example.config.RuleConfig.GENERAL;
 import static org.example.config.RuleConfig.SPECIAL;
 
@@ -25,8 +25,8 @@ public class Main {
   }
 
   private static RuleConfig getRuleConfig(String[] args) {
-    boolean isAllowed = ofNullable(args[0]).stream()
-            .anyMatch(config().getMultipleStealingFlag()::equalsIgnoreCase);
+    boolean isAllowed = Arrays.stream(args)
+            .anyMatch("-f"::equalsIgnoreCase);
 
     RuleConfig ruleConfig = isAllowed
             ? SPECIAL
