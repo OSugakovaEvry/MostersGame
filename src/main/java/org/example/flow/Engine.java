@@ -1,6 +1,6 @@
 package org.example.flow;
 
-import lombok.AllArgsConstructor;
+import org.example.config.RuleConfig;
 import org.example.data.Packet;
 import org.example.data.Player;
 import org.example.provider.FortuneProvider;
@@ -10,16 +10,15 @@ import java.util.Map;
 
 import static org.example.config.Config.config;
 
-public class Round {
-  private List<Player> players;
-  private Map<Integer, Packet> food;
+public class Engine {
+  private final RuleConfig ruleConfig;
 
-  public Round(List<Player> players, Map<Integer, Packet> food) {
-    this.players = players.stream().sorted().toList();
-    this.food = food;
+  public Engine(RuleConfig ruleConfig) {
+    this.ruleConfig = ruleConfig;
   }
 
-  public void run() {
+  public void run(List<Player> players, Map<Integer, Packet> food) {
+    players = reorder(players);
     int thiefIdx = FortuneProvider.getThiefIdx(players.size());
     for (int i = 0; i < players.size(); i++) {
 
@@ -28,19 +27,15 @@ public class Round {
 
       if (i == thiefIdx) {
         Packet stolenDish = steal(players, food, i);
-        if (stolenDish.isPoison()) {
-          packet.setPoison(true);
-        }
-        player = player.eat(packet);
-        player = player.eat(stolenDish);
+        player.eat(packet, stolenDish);
       } else {
         if (packet == null) {
-          if (config().isMultipleStealingAllowed() && i < players.size() - 1) {
+          if (ruleConfig.isSpecial() && isNotLast(players, i)) {
             Packet stolenPacket = steal(players, food, i);
-            player = player.eat(stolenPacket);
+            player.eat(stolenPacket);
           }
         } else {
-          player = player.eat(packet);
+          player.eat(packet);
         }
       }
 
@@ -48,17 +43,28 @@ public class Round {
     }
   }
 
-  private void reorder(List<Player> players) {
-    this.players = players.stream().sorted().toList();
-    System.out.println("Ordered Players: " + players);
+  private static boolean isNotLast(List<Player> players, int i) {
+    return i < players.size() - 1;
+  }
+
+  private List<Player> reorder(List<Player> players) {
+    List<Player> reordered = players.stream().sorted().toList();
+    System.out.println("Ordered Players: " + reordered);
+    return reordered;
   }
 
   private static Packet steal(List<Player> players, Map<Integer, Packet> foodMap, int i) {
     int robbedIdx = FortuneProvider.getRobbedIdx(i, players.size());
-    Integer playerId = players.get(robbedIdx).getId();
+    int playerId = players.get(robbedIdx).getId();
+
     Packet stolenPacket = foodMap.get(playerId);
     foodMap.put(playerId, null);
-    System.out.printf("Player [%s] steal [%s] from [%s]%n", players.get(i).toString(), stolenPacket.toString(), players.get(robbedIdx).toString());
+
+    System.out.printf("Player [%s] steal [%s] from [%s]%n",
+            players.get(i).toString(),
+            stolenPacket.toString(),
+            players.get(robbedIdx).toString());
+
     return stolenPacket;
   }
 }

@@ -1,44 +1,39 @@
 package org.example.data;
 
-import junit.framework.TestCase;
-import org.example.flow.Game;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@ExtendWith(MockitoExtension.class)
-public class PlayerTest extends TestCase {
-//  @Mock
-  private Player player;
+public class PlayerTest {
 
-  @Override
-  @Before
-  public void setUp() throws Exception {
-    this.player = new Player(5);
+  @Test
+  public void testEatOwnPacketPoisoned() {
+    Player player = new Player(5);
+
+    Packet ownPacket = new PoisonedPacket(1);
+    Packet stolenPacket = new Packet(2);
+
+    player = player.eat(ownPacket, stolenPacket);
+
+    assertEquals(6, player.getCalories());
   }
 
   @Test
-  public void testPay() {
-  }
-
-  public void testEat() {
+  public void testStealPoisoned() {
     Player player = new Player(5);
-    Packet dish = Packet.builder().calories(1).isPoison(true).build();
-    Packet stolenDish = Packet.builder().calories(2).build();
-//    ArgumentCaptor<Map> requestBodyCaptor = ArgumentCaptor.forClass(Map.class);
-//    verify(documentService, times(1))
-//            .executeInitDocumentRequest(requestBodyCaptor.capture(), any());
-    player = player.eat(dish, stolenDish);
-    assertTrue(player.getCalories() == 2);
+
+    Packet ownPacket = new Packet(1);
+    Packet stolenPacket = new PoisonedPacket(2);
+
+    player = player.eat(ownPacket, stolenPacket);
+
+    assertEquals(player.getCalories(), 2);
   }
 
-  public void testTestEat() {
-  }
-
-  public void testIsAlive() {
+  private static Stream<List<Player>> packets() {
+    return Stream.of(null, List.of(), List.of(new Player(1)));
   }
 }

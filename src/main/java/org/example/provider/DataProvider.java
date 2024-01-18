@@ -2,15 +2,16 @@ package org.example.provider;
 
 import org.example.data.Packet;
 import org.example.data.Player;
+import org.example.data.PoisonedPacket;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.example.config.Config.config;
+import static org.example.provider.FortuneProvider.random;
 
 public class DataProvider {
 
@@ -29,16 +30,14 @@ public class DataProvider {
     }
 
     return playersIds.stream()
-            .collect(Collectors.toMap(identity(), p -> getPortion(poisonProbability, calories)));
+            .collect(toMap(identity(), p -> getPortion(poisonProbability, calories)));
   }
 
   private static Packet getPortion(double poisonProbability, List<Integer> calories) {
-    Random random = new Random();
     int nextInt = random.nextInt(calories.size());
 
-    return Packet.builder()
-            .calories(calories.get(nextInt))
-            .isPoison(random.nextDouble() <= poisonProbability)
-            .build();
+    return random.nextDouble() <= poisonProbability
+            ? new PoisonedPacket(calories.get(nextInt))
+            : new Packet(calories.get(nextInt));
   }
 }

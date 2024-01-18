@@ -17,30 +17,21 @@ public class Player implements Comparable<Player> {
     this.calories = config().getInitialCalories();
   }
 
-  public void pay(int payment) {
+  public Player pay(int payment) {
     this.calories -= payment;
+    return this;
   }
 
   public Player eat(Packet packet) {
     if (packet.isPoison()) {
-      System.out.printf("Player %d has been poisoned, [-%d] calories%n", this.getId(), packet.getCalories());
-      calories -= packet.getCalories();
-    } else {
-      calories += packet.getCalories();
+      System.out.printf("Player %d has been poisoned, [%d] calories%n", this.getId(), packet.getCalories());
     }
+    calories += packet.getCalories();
     return this;
   }
 
   public Player eat(Packet dish, Packet stolenDish) {
-    if (stolenDish.isPoison()) {
-      dish.setPoison(true);
-    }
-    this.eat(dish);
-//    Packet newPacket = Packet.builder()
-//            .calories(dish.getCalories() + stolenDish.getCalories())
-//            .isPoison(stolenDish.isPoison())
-//            .build();
-
+    this.eat(stolenDish.isPoison() ? new PoisonedPacket(dish.getCalories()) : dish);
     this.eat(stolenDish);
     return this;
   }
