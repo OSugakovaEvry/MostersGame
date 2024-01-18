@@ -1,10 +1,13 @@
 package org.example;
 
+import org.example.config.RuleConfig;
 import org.example.data.Player;
 import org.example.flow.Game;
-import org.example.config.RuleConfig;
 
-import java.util.Optional;
+import static java.util.Optional.ofNullable;
+import static org.example.config.Config.config;
+import static org.example.config.RuleConfig.GENERAL;
+import static org.example.config.RuleConfig.SPECIAL;
 
 public class Main {
 
@@ -12,8 +15,7 @@ public class Main {
     System.out.println("Welcome to the Monsters Game!");
     System.out.println("=== Start ===\n\n");
 
-    RuleConfig ruleConfig = getRuleConfig(args);
-    Player winner = new Game(ruleConfig)
+    Player winner = new Game(getRuleConfig(args))
             .play();
 
     System.out.println("=== End ===\n\n");
@@ -23,13 +25,14 @@ public class Main {
   }
 
   private static RuleConfig getRuleConfig(String[] args) {
-    boolean specialMode = Optional.ofNullable(args[0]).stream()
-            .anyMatch("multipleStealingAllowed"::equalsIgnoreCase);
-    return specialMode ? RuleConfig.SPECIAL : RuleConfig.GENERAL;
-  }
+    boolean isAllowed = ofNullable(args[0]).stream()
+            .anyMatch(config().getMultipleStealingFlag()::equalsIgnoreCase);
 
-  private static boolean isMultiplyStealingAllowed(String[] args) {
-    return Optional.ofNullable(args[0]).stream()
-            .anyMatch("multipleStealingAllowed"::equalsIgnoreCase);
+    RuleConfig ruleConfig = isAllowed
+            ? SPECIAL
+            : GENERAL;
+
+    System.out.printf("Multiple stealing allowed: %s, mode: %s", isAllowed, ruleConfig);
+    return ruleConfig;
   }
 }

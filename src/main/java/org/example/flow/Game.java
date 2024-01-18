@@ -26,7 +26,7 @@ public class Game {
 
       players = grabSurvives(players);
     }
-    return players.get(0);
+    return players.getFirst();
   }
 
   private List<Player> initPlayers() {
@@ -55,9 +55,9 @@ public class Game {
             .filter(Player::isAlive)
             .toList();
 
-     if (survives.isEmpty()) {
-       survives = singletonList(players.get(players.size() - 1));
-     }
+    if (survives.isEmpty()) {
+      survives = singletonList(players.getLast());
+    }
 
     System.out.println("Survives: " + players);
     return survives;

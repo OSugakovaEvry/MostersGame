@@ -14,7 +14,7 @@ public class FortuneProvider {
     return random.nextInt(fromIdx, size);
   }
 
-  public static double getPlayerSuccessProbability() {
+  public static double getSuccessProbability() {
     return random.nextDouble(0.4, 1); // more.likely
   }
 }

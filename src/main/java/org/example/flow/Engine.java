@@ -26,15 +26,21 @@ public class Engine {
       Packet packet = food.get(player.getId());
 
       if (i == thiefIdx) {
+        // steal and eat
         Packet stolenDish = steal(players, food, i);
         player.eat(packet, stolenDish);
+
       } else {
         if (packet == null) {
           if (ruleConfig.isSpecial() && isNotLast(players, i)) {
+
+            // steal
             Packet stolenPacket = steal(players, food, i);
             player.eat(stolenPacket);
+
           }
         } else {
+          // eat
           player.eat(packet);
         }
       }

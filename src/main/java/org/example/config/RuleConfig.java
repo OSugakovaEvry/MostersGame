@@ -5,6 +5,6 @@ public enum RuleConfig {
   SPECIAL;
 
   public boolean isSpecial() {
-   return this == SPECIAL;
+    return this == SPECIAL;
   }
 }

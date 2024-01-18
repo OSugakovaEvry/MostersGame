@@ -2,7 +2,6 @@ package org.example.config;
 
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -30,6 +29,5 @@ public final class Config {
 
   // flow.details
   private final int roundPayment = 1;
-  @Getter @Setter
-  private boolean multipleStealingAllowed;
+  private final String multipleStealingFlag = "-f";
 }

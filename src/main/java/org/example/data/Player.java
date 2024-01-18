@@ -42,7 +42,7 @@ public class Player implements Comparable<Player> {
 
   @Override
   public int compareTo(Player otherPlayer) {
-    double probability = FortuneProvider.getPlayerSuccessProbability();
+    double probability = FortuneProvider.getSuccessProbability();
     return Double.compare(otherPlayer.getCalories() * probability, this.getCalories() * probability);
   }
 }
